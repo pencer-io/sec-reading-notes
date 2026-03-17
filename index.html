@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecNotes — Pentest Companion</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #21262d;
+    --border: #30363d;
+    --border2: #484f58;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --text3: #6e7681;
+    --accent: #f78166;
+    --accent2: #79c0ff;
+    --accent3: #56d364;
+    --accent4: #d2a8ff;
+    --warn: #e3b341;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    --font-main: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0d1117;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .api-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .api-badge.set {
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+
+  .api-badge:hover { border-color: var(--border2); color: var(--text2); }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  .setup-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+
+  .setup-panel h2 {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+
+  .setup-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  input[type="password"], input[type="text"] {
+    flex: 1;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 9px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input:focus { border-color: var(--accent2); }
+
+  button {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  button:hover { border-color: var(--border2); background: #2d333b; }
+  button:active { transform: scale(0.98); }
+
+  button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0d1117;
+    font-weight: 600;
+  }
+
+  button.primary:hover { background: #ff9580; border-color: #ff9580; }
+
+  .phases-section h2 {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+
+  .phases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .phase-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .phase-card:hover { border-color: var(--border2); background: #1c2128; }
+
+  .phase-card.active {
+    border-color: var(--accent);
+    background: rgba(247, 129, 102, 0.08);
+  }
+
+  .phase-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    background: rgba(247, 129, 102, 0.12);
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .phase-info { flex: 1; }
+  .phase-name { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; }
+  .phase-count { font-size: 11px; color: var(--text3); margin-top: 3px; font-family: var(--font-mono); }
+
+  .results-section { display: none; }
+  .results-section.visible { display: block; }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .results-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .results-meta {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: var(--font-mono);
+  }
+
+  .briefing-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .briefing-box h3 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent2);
+    margin-bottom: 16px;
+  }
+
+  .briefing-content {
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  .briefing-content code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: var(--accent4);
+  }
+
+  pre {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 10px 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent3);
+    line-height: 1.6;
+  }
+
+  .source-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .source-note {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .source-note-title {
+    font-size: 12px;
+    color: var(--text2);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .source-note-link {
+    font-size: 11px;
+    color: var(--accent2);
+    font-family: var(--font-mono);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .source-note-link:hover { text-decoration: underline; }
+
+  .loading {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 24px;
+    color: var(--text2);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .loading.visible { display: flex; }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .status-bar {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text3);
+    padding: 8px 0;
+    min-height: 30px;
+  }
+
+  .status-bar.error { color: var(--accent); }
+  .status-bar.success { color: var(--accent3); }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text3);
+    margin: 2px;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  .tab-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .tab {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    color: var(--text3);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    border-radius: 0;
+    transition: color 0.15s;
+  }
+
+  .tab:hover { color: var(--text2); background: none; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text3);
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.visible { display: flex; }
+
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 24px;
+    width: 90%;
+    max-width: 460px;
+  }
+
+  .modal h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .modal p {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">S</div>
+    SecNotes
+  </a>
+  <div class="header-right">
+    <span class="api-badge" id="apiStatus" onclick="showApiModal()">no api key</span>
+    <a href="https://github.com/pencer-io/sec-reading-notes" target="_blank" style="text-decoration:none;">
+      <button style="font-family:var(--font-mono);font-size:12px;">github repo</button>
+    </a>
+  </div>
+</header>
+
+<main>
+
+  <div class="phases-section">
+    <h2>Select phase</h2>
+    <div class="phases-grid" id="phasesGrid"></div>
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+
+  <div class="loading" id="loadingEl">
+    <div class="spinner"></div>
+    <span id="loadingText">Fetching notes from GitHub...</span>
+  </div>
+
+  <div class="results-section" id="resultsSection">
+    <div class="results-header">
+      <div class="results-title" id="resultsTitle"></div>
+      <div class="results-meta" id="resultsMeta"></div>
+    </div>
+
+    <div class="tab-row">
+      <button class="tab active" onclick="switchTab('briefing', this)">AI Briefing</button>
+      <button class="tab" onclick="switchTab('tools', this)">Tools & Commands</button>
+      <button class="tab" onclick="switchTab('cves', this)">CVEs</button>
+      <button class="tab" onclick="switchTab('sources', this)">Source Notes</button>
+    </div>
+
+    <div class="tab-content active" id="tab-briefing">
+      <div class="briefing-box">
+        <h3>Engagement briefing</h3>
+        <div class="briefing-content" id="briefingContent"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-tools">
+      <div class="briefing-box">
+        <h3>Tools & commands</h3>
+        <div class="briefing-content" id="toolsContent"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-cves">
+      <div class="briefing-box">
+        <h3>CVEs referenced</h3>
+        <div class="briefing-content" id="cvesContent"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-sources">
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text3);">Source notes used to generate this briefing:</div>
+      <div class="source-notes" id="sourceNotes"></div>
+    </div>
+  </div>
+
+</main>
+
+<div class="modal-overlay" id="apiModal">
+  <div class="modal">
+    <h3>Claude API key</h3>
+    <p>Your key is used only in this browser session to generate AI briefings. It is never stored or sent anywhere except directly to the Anthropic API.</p>
+    <div class="setup-row" style="margin-bottom:16px;">
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-..." />
+    </div>
+    <div class="modal-actions">
+      <button onclick="hideApiModal()">Cancel</button>
+      <button class="primary" onclick="saveApiKey()">Save key</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const REPO_OWNER = 'pencer-io';
+const REPO_NAME = 'sec-reading-notes';
+const GITHUB_API = 'https://api.github.com';
+const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
+
+const PHASES = [
+  { num: '01', name: 'Planning & Preparation', folder: '01-planning-and-preparation' },
+  { num: '02', name: 'Reconnaissance', folder: '02-reconnaissance' },
+  { num: '03', name: 'Scanning & Enumeration', folder: '03-scanning-and-enumeration' },
+  { num: '04', name: 'Vulnerability Assessment', folder: '04-vulnerability-assessment' },
+  { num: '05', name: 'Exploitation', folder: '05-exploitation' },
+  { num: '06', name: 'Post-Exploitation', folder: '06-post-exploitation' },
+  { num: '07', name: 'Reporting', folder: '07-reporting' },
+  { num: '08', name: 'Remediation & Follow-up', folder: '08-remediation-and-followup' },
+];
+
+let apiKey = sessionStorage.getItem('claudeKey') || '';
+let activePhase = null;
+let phaseCounts = {};
+
+function setStatus(msg, type = '') {
+  const el = document.getElementById('statusBar');
+  el.textContent = msg;
+  el.className = 'status-bar' + (type ? ' ' + type : '');
+}
+
+function setLoading(visible, text = 'Fetching notes from GitHub...') {
+  document.getElementById('loadingEl').className = 'loading' + (visible ? ' visible' : '');
+  document.getElementById('loadingText').textContent = text;
+}
+
+function showApiModal() {
+  document.getElementById('apiKeyInput').value = apiKey;
+  document.getElementById('apiModal').className = 'modal-overlay visible';
+}
+
+function hideApiModal() {
+  document.getElementById('apiModal').className = 'modal-overlay';
+}
+
+function saveApiKey() {
+  const val = document.getElementById('apiKeyInput').value.trim();
+  if (!val) return;
+  apiKey = val;
+  sessionStorage.setItem('claudeKey', val);
+  updateApiBadge();
+  hideApiModal();
+}
+
+function updateApiBadge() {
+  const badge = document.getElementById('apiStatus');
+  if (apiKey) {
+    badge.textContent = 'api key set';
+    badge.className = 'api-badge set';
+  } else {
+    badge.textContent = 'no api key';
+    badge.className = 'api-badge';
+  }
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+async function fetchPhaseFiles(folder) {
+  const url = `${GITHUB_API}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${folder}`;
+  const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
+  if (!res.ok) return [];
+  const files = await res.json();
+  return files.filter(f => f.name.endsWith('.md') && f.name !== 'README.md');
+}
+
+async function fetchFileContent(downloadUrl) {
+  const res = await fetch(downloadUrl);
+  if (!res.ok) return '';
+  return await res.text();
+}
+
+async function loadPhaseCounts() {
+  for (const phase of PHASES) {
+    try {
+      const files = await fetchPhaseFiles(phase.folder);
+      phaseCounts[phase.folder] = files.length;
+    } catch { phaseCounts[phase.folder] = 0; }
+  }
+  renderPhases();
+}
+
+function renderPhases() {
+  const grid = document.getElementById('phasesGrid');
+  grid.innerHTML = '';
+  PHASES.forEach(phase => {
+    const count = phaseCounts[phase.folder] || 0;
+    const div = document.createElement('div');
+    div.className = 'phase-card' + (activePhase === phase.folder ? ' active' : '');
+    div.innerHTML = `
+      <span class="phase-num">${phase.num}</span>
+      <div class="phase-info">
+        <div class="phase-name">${phase.name}</div>
+        <div class="phase-count">${count} note${count !== 1 ? 's' : ''}</div>
+      </div>`;
+    div.onclick = () => selectPhase(phase);
+    grid.appendChild(div);
+  });
+}
+
+async function selectPhase(phase) {
+  if (!apiKey) {
+    showApiModal();
+    setStatus('Set your Claude API key first.', 'error');
+    return;
+  }
+  activePhase = phase.folder;
+  renderPhases();
+  document.getElementById('resultsSection').className = 'results-section';
+  setLoading(true, 'Fetching notes from GitHub...');
+  setStatus('');
+
+  try {
+    const files = await fetchPhaseFiles(phase.folder);
+    if (files.length === 0) {
+      setLoading(false);
+      setStatus(`No notes yet in ${phase.name}. Add some articles via the project.`, 'error');
+      return;
+    }
+
+    setLoading(true, `Reading ${files.length} note${files.length !== 1 ? 's' : ''}...`);
+    const contents = await Promise.all(files.map(f => fetchFileContent(f.download_url)));
+
+    setLoading(true, 'Generating AI briefing...');
+    const combined = files.map((f, i) => `--- NOTE: ${f.name} ---\n${contents[i]}`).join('\n\n');
+
+    const prompt = `You are a penetration testing assistant. Below are research notes from a security analyst covering the "${phase.name}" phase of a pentest.
+
+Analyse all the notes and produce a structured briefing with four clearly labelled sections:
+
+## ENGAGEMENT BRIEFING
+A concise, actionable summary of the key techniques, approaches and considerations for this phase based on the notes. Write it as if briefing a pentester before they start this phase. Use bullet points.
+
+## TOOLS & COMMANDS
+List every tool mentioned across the notes. For each tool include: tool name, what it does, and any example commands or syntax from the notes. Format command examples in code blocks.
+
+## CVES REFERENCED
+List every CVE mentioned across all notes. For each include the CVE ID and a one-line description of what it is.
+
+## SOURCE NOTES
+List the filenames of all notes you used.
+
+Here are the notes:
+
+${combined}`;
+
+    const response = await fetch(ANTHROPIC_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'API error');
+    }
+
+    const data = await response.json();
+    const text = data.content[0].text;
+
+    const sections = parseSections(text);
+
+    document.getElementById('briefingContent').innerHTML = formatContent(sections.briefing || text);
+    document.getElementById('toolsContent').innerHTML = formatContent(sections.tools || 'No tool examples found in these notes.');
+    document.getElementById('cvesContent').innerHTML = formatContent(sections.cves || 'No CVEs referenced in these notes.');
+
+    const sourceNotes = document.getElementById('sourceNotes');
+    sourceNotes.innerHTML = '';
+    files.forEach(f => {
+      const div = document.createElement('div');
+      div.className = 'source-note';
+      div.innerHTML = `
+        <span class="source-note-title">${f.name.replace(/\.md$/, '')}</span>
+        <a class="source-note-link" href="${f.html_url}" target="_blank">view on github</a>`;
+      sourceNotes.appendChild(div);
+    });
+
+    document.getElementById('resultsTitle').textContent = phase.name;
+    document.getElementById('resultsMeta').textContent = `${files.length} note${files.length !== 1 ? 's' : ''} · generated now`;
+    document.getElementById('resultsSection').className = 'results-section visible';
+    setLoading(false);
+    setStatus(`Briefing generated from ${files.length} note${files.length !== 1 ? 's' : ''}.`, 'success');
+
+  } catch (err) {
+    setLoading(false);
+    setStatus('Error: ' + err.message, 'error');
+  }
+}
+
+function parseSections(text) {
+  const briefingMatch = text.match(/##\s*ENGAGEMENT BRIEFING\s*([\s\S]*?)(?=##\s*TOOLS|$)/i);
+  const toolsMatch = text.match(/##\s*TOOLS[^#]*?\s*([\s\S]*?)(?=##\s*CVES|$)/i);
+  const cvesMatch = text.match(/##\s*CVES[^#]*?\s*([\s\S]*?)(?=##\s*SOURCE|$)/i);
+  return {
+    briefing: briefingMatch ? briefingMatch[1].trim() : null,
+    tools: toolsMatch ? toolsMatch[1].trim() : null,
+    cves: cvesMatch ? cvesMatch[1].trim() : null,
+  };
+}
+
+function formatContent(text) {
+  return text
+    .replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) => `<pre>${escapeHtml(code.trim())}</pre>`)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/^### (.+)$/gm, '<h4 style="color:var(--accent2);font-size:13px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;margin:16px 0 8px;">$1</h4>')
+    .replace(/^## (.+)$/gm, '<h3 style="color:var(--text2);font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;margin:20px 0 10px;">$1</h3>')
+    .replace(/^- (.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0;"><span style="color:var(--accent);flex-shrink:0;">›</span><span>$1</span></div>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '\n');
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+updateApiBadge();
+loadPhaseCounts();
+</script>
+</body>
+</html>
