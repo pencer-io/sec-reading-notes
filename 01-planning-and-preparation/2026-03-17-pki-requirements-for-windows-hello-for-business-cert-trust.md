@@ -3,7 +3,7 @@ title: PKI Requirements for Windows Hello for Business Cert Trust
 url: https://msendpointmgr.com/2025/11/24/pki-requirements-for-windows-hello-for-business-cert-trust
 date_added: 2026-03-17
 phase: Planning and Preparation
-tags: windows-hello-for-business, pki, certificate-templates, active-directory, kerberos, ksp, cng, ad-cs, hybrid-identity, smart-card-logon, kdc-authentication, enrollment-agent, tpm, ad-fs, passwordless
+tags: windows-hello-for-business, pki, certificate-templates, active-directory, kerberos, ksp, cng, ad-cs, hybrid-identity, smart-card-logon, kdc-authentication, enrollment-agent, tpm, ad-fs, passwordless, port-88, port-389, port-443
 images: 1 found — recommend reviewing article for full context
 ---
 
