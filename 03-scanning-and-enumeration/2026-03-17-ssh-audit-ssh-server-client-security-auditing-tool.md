@@ -3,7 +3,7 @@ title: ssh-audit - SSH Server & Client Security Auditing Tool
 url: https://github.com/jtesta/ssh-audit
 date_added: 2026-03-17
 phase: Scanning and Enumeration
-tags: ssh, auditing, cryptography, key-exchange, hardening, openssh, cve-2002-20001, cve-2023-48795, terrapin, diffie-hellman, quantum
+tags: ssh, auditing, cryptography, key-exchange, hardening, openssh, cve-2002-20001, cve-2023-48795, terrapin, diffie-hellman, quantum, port-22
 ---
 
 ## Summary
