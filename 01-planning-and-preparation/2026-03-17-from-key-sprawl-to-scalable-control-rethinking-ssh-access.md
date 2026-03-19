@@ -3,7 +3,7 @@ title: "From Key Sprawl to Scalable Control: Rethinking SSH Access"
 url: https://www.hashicorp.com/en/blog/from-key-sprawl-to-scalable-control-rethinking-ssh-access
 date_added: 2026-03-17
 phase: Planning and Preparation
-tags: ssh, ssh-certificates, credential-management, vault, hashicorp, boundary, key-management, zero-trust, privilege-access, secret-sprawl, ca, ed25519, rsa
+tags: ssh, ssh-certificates, credential-management, vault, hashicorp, boundary, key-management, zero-trust, privilege-access, secret-sprawl, ca, ed25519, rsa, port-22
 ---
 
 ## Summary
