@@ -4,7 +4,7 @@ url: https://specterops.io/blog/2025/10/30/sharehound-an-opengraph-collector-for
 date_added: 2026-04-17
 phase: scanning-and-enumeration
 tags: bloodhound, opengraph, smb, network-shares, active-directory, enumeration, cypher, shareql, lateral-movement, ransomware, post-exploitation, port-445
-images: 7 found (screenshots: 5, diagrams: 2) — recommend reviewing article for full context
+images: "7 found (screenshots: 5, diagrams: 2) - recommend reviewing article for full context"
 ---
 
 ## Disclaimer
@@ -22,7 +22,7 @@ resulting JSON output is ingested into BloodHound, enabling attack path analysis
   using BFS, generating BloodHound-compatible OpenGraph data
 - Uses a **thread-per-share** model with per-host concurrency limits to prevent server overload; more efficient
   than thread-per-host for domains with many shares
-- **ShareQL** is a purpose-built DSL (firewall-style rule evaluation) for filtering share crawls — rules are
+- **ShareQL** is a purpose-built DSL (firewall-style rule evaluation) for filtering share crawls -- rules are
   evaluated sequentially and stop on first match; a VSCode syntax-highlighting extension is available
 - Share permissions are modelled as typed edges: `CanWriteDacl`, `CanWriteOwner`, `CanDsWriteProperty`,
   `CanDsWriteExtendedProperties`, `CanDelete`, `CanReadControl`, etc.
@@ -79,7 +79,7 @@ MATCH p=(h:NetworkShareHost)-[:HasNetworkShare]->(s:NetworkShareSMB)-[:Contains*
 WHERE toLower(f.extension) = toLower(".vmdk")
 RETURN p
 ```
-In spen.local this would be particularly impactful if a VMDK of spendc09 were recoverable — it would
+In spen.local this would be particularly impactful if a VMDK of spendc09 were recoverable -- it would
 contain the NTDS.dit and allow offline credential extraction.
 
 **Find files by name (e.g. hunting for credential files):**
@@ -115,7 +115,7 @@ None.
   mapping; however the findings directly support post-exploitation (lateral movement, ransomware staging)
 - Tool is Python-based and installable via `pip install sharehound`; source at https://github.com/p0dalirius/sharehound
 - Author (Remi GASCOU / p0dalirius) is also author of Coercer, LDAPmonitor, FindUncommonShares, and smbclient-ng
-- The VMDK scenario described in the article is realistic for spen.local — worth checking `spensmb2` and
+- The VMDK scenario described in the article is realistic for spen.local -- worth checking `spensmb2` and
   `spensmb31` for any forgotten VM disk images, especially given the older `spensmb2` (Server 2008) which may
   have inherited legacy share structures
 - ShareQL VSCode extension: https://github.com/p0dalirius/shareql-vscode-ext
